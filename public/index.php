@@ -29,7 +29,7 @@
                         <a href="catalogo.php" class="nav-link px-3">Catálogo</a>
                     </li>
                     <li class="nav-item">
-                        <a href="kit-tuneup.php" class="nav-link px-3">Kit Tune-Up</a>
+                        <a href="kitTuneup.php" class="nav-link px-3">Kit Tune-Up</a>
                     </li>
                     <li class="nav-item">
                         <a href="sucursales.php" class="nav-link px-3">Sucursales</a>
@@ -258,10 +258,6 @@
         </div>
     </section>
 
-
-    <!-- =========================================================================
-      [PIE DE PÁGINA]
-    ========================================================================= -->
     <footer class="py-5 mt-auto border-top bg-dark text-light">
         <div class="container">
             <div class="row g-4">
