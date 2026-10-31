@@ -47,6 +47,153 @@
         </div>
     </nav>
     
+<main class="py-5">
+        <div class="container py-lg-4">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-8 col-lg-5">
+ 
+                    <div class="card border-0 shadow-lg rounded-4 p-4 p-md-5 bg-white">
+ 
+                        <div class="text-center mb-4">
+                            <i class="bi bi-person-lock fs-1 text-warning"></i>
+                            <h1 class="h3 fw-bold mt-2">Bienvenido a Don Pancho</h1>
+                            <p class="text-muted small mb-0">Entra con tu cuenta o crea una nueva</p>
+                        </div>
+ 
+                        <!-- Aquí van los mensajes generales (aviso de acceso denegado / registro exitoso).
+                             Ejemplos del diseño:
+ 
+                        <div class="alert alert-warning small" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill"></i> Debes iniciar sesión con un usuario autorizado para entrar al panel.
+                        </div>
+ 
+                        <div class="alert alert-success small" role="alert">
+                            <i class="bi bi-check-circle-fill"></i> Cuenta creada correctamente. Ya puedes iniciar sesión.
+                        </div>
+                        -->
+ 
+                        <!-- Pestañas: ya tengo cuenta / soy nuevo -->
+                        <ul class="nav nav-pills nav-fill mb-4" id="tabsAcceso" role="tablist"
+                            style="--bs-nav-pills-link-active-bg: #ffc107; --bs-nav-pills-link-active-color: #212529;">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link fw-bold active"
+                                        id="tab-login" data-bs-toggle="pill" data-bs-target="#panel-login"
+                                        type="button" role="tab" aria-controls="panel-login"
+                                        aria-selected="true">
+                                    Ya tengo cuenta
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link fw-bold"
+                                        id="tab-registro" data-bs-toggle="pill" data-bs-target="#panel-registro"
+                                        type="button" role="tab" aria-controls="panel-registro"
+                                        aria-selected="false">
+                                    Soy nuevo
+                                </button>
+                            </li>
+                        </ul>
+ 
+                        <div class="tab-content">
+ 
+                            <!-- ===== INICIAR SESIÓN ===== -->
+                            <div class="tab-pane fade show active"
+                                 id="panel-login" role="tabpanel" aria-labelledby="tab-login" tabindex="0">
+ 
+                                <!-- Aquí va el error del login. Ejemplo del diseño:
+ 
+                                <div class="alert alert-danger small" role="alert">
+                                    <i class="bi bi-x-circle-fill"></i> Usuario o contraseña incorrectos.
+                                </div>
+                                -->
+ 
+                                <form action="login.php" method="POST" novalidate>
+                                    <input type="hidden" name="accion" value="login">
+                                    <input type="hidden" name="token" value="">
+ 
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" type="text" id="login-usuario" name="usuario"
+                                               placeholder="Usuario" autocomplete="username"
+                                               value="" required>
+                                        <label for="login-usuario">Usuario</label>
+                                    </div>
+ 
+                                    <div class="form-floating mb-4">
+                                        <input class="form-control" type="password" id="login-clave" name="clave"
+                                               placeholder="Contraseña" autocomplete="current-password" required>
+                                        <label for="login-clave">Contraseña</label>
+                                    </div>
+ 
+                                    <button class="btn btn-lg rounded-pill fw-bold w-100 shadow btn-warning" type="submit">
+                                        <i class="bi bi-box-arrow-in-right"></i> Entrar
+                                    </button>
+                                </form>
+ 
+                                <p class="text-center small text-muted mt-4 mb-0">
+                                    ¿No tienes cuenta?
+                                    <a href="#" class="fw-bold link-dark" data-ir-tab="tab-registro">Regístrate aquí</a>
+                                </p>
+                            </div>
+ 
+                            <!-- ===== REGISTRO (solo clientes) ===== -->
+                            <div class="tab-pane fade"
+                                 id="panel-registro" role="tabpanel" aria-labelledby="tab-registro" tabindex="0">
+ 
+                                <!-- Aquí va el error del registro. Ejemplo del diseño:
+ 
+                                <div class="alert alert-danger small" role="alert">
+                                    <i class="bi bi-x-circle-fill"></i> Ese nombre de usuario ya está en uso. Elige otro.
+                                </div>
+                                -->
+ 
+                                <form action="login.php" method="POST" novalidate>
+                                    <input type="hidden" name="accion" value="registro">
+                                    <input type="hidden" name="token" value="">
+ 
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" type="text" id="reg-nombre" name="nombre"
+                                               placeholder="Nombre completo" maxlength="100" autocomplete="name"
+                                               value="" required>
+                                        <label for="reg-nombre">Nombre completo</label>
+                                    </div>
+ 
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" type="text" id="reg-usuario" name="usuario"
+                                               placeholder="Usuario" maxlength="30" autocomplete="username"
+                                               value="" required>
+                                        <label for="reg-usuario">Usuario (4 a 30 caracteres)</label>
+                                    </div>
+ 
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" type="password" id="reg-clave" name="clave"
+                                               placeholder="Contraseña" minlength="8" autocomplete="new-password" required>
+                                        <label for="reg-clave">Contraseña (mínimo 8 caracteres)</label>
+                                    </div>
+ 
+                                    <div class="form-floating mb-4">
+                                        <input class="form-control" type="password" id="reg-clave2" name="clave2"
+                                               placeholder="Repite la contraseña" minlength="8" autocomplete="new-password" required>
+                                        <label for="reg-clave2">Repite la contraseña</label>
+                                    </div>
+ 
+                                    <button class="btn btn-lg rounded-pill fw-bold w-100 shadow btn-dark" type="submit">
+                                        <i class="bi bi-person-plus-fill"></i> Crear cuenta
+                                    </button>
+                                </form>
+ 
+                                <p class="text-center small text-muted mt-4 mb-0">
+                                    ¿Ya tienes cuenta?
+                                    <a href="#" class="fw-bold link-dark" data-ir-tab="tab-login">Inicia sesión</a>
+                                </p>
+                            </div>
+ 
+                        </div>
+                    </div>
+ 
+                </div>
+            </div>
+        </div>
+    </main>
+    
     <footer class="py-5 mt-auto border-top bg-dark text-light">
         <div class="container">
             <div class="row g-4">
