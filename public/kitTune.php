@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../include/auth.php';
+session_start();
 require_once __DIR__ . '/../include/conexion.php';
 
 $conexion = new ConexionBD();
@@ -27,6 +27,18 @@ if ($parametro == 'suv') {
     $vehiculoElegido = 'Pick-Up 4x4';
 } else {
     $vehiculoElegido = 'Sedán';
+}
+
+// Mensajes que deja agregar_kit.php (se muestran una sola vez)
+$mensaje = '';
+$mensajeError = '';
+if (isset($_SESSION['mensaje'])) {
+    $mensaje = $_SESSION['mensaje'];
+    unset($_SESSION['mensaje']);
+}
+if (isset($_SESSION['mensaje_error'])) {
+    $mensajeError = $_SESSION['mensaje_error'];
+    unset($_SESSION['mensaje_error']);
 }
 ?>
 <!DOCTYPE html>
@@ -65,105 +77,114 @@ if ($parametro == 'suv') {
 
         <main class="container my-5">
 
-            <form id="formKit" class="row g-4">
+        <!-- Ahora el formulario se envía de verdad a agregar_kit.php por POST -->
+        <form id="formKit" method="POST" action="agregar_kit.php" class="row g-4">
 
                 <div class="col-12 col-lg-8">
 
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-body">
-                            <h5 class="fw-bold mb-3"><span class="badge bg-warning text-dark me-2">1</span>Tipo de vehículo</h5>
-                            <div class="row g-3">
-                                <?php foreach ($vehiculos as $v) {
-                                    $icono = "bi-car-front-fill";
-                                    if ($v['nombre'] == "SUV") {
-                                        $icono = "bi-truck-front-fill";
-                                    }
-                                    if ($v['nombre'] == "Pick-Up 4x4") {
-                                        $icono = "bi-truck";
-                                    }
-                                ?>
-                                    <div class="col-12 col-md-4">
-                                        <input type="radio" class="btn-check" name="vehiculo" id="vehiculo_<?= $v['id'] ?>" data-nombre="<?= $v['nombre'] ?>" data-precio="<?= $v['costo'] ?>"
-                                            <?php if ($v['nombre'] == $vehiculoElegido) { echo 'checked'; } ?>>
-                                        <label class="btn btn-outline-warning text-dark w-100 h-100 d-flex flex-column align-items-center p-3" for="vehiculo_<?= $v['id'] ?>">
-                                            <i class="bi <?= $icono ?> fs-1"></i>
-                                            <span class="fw-bold fs-5"><?= $v['nombre'] ?></span>
-                                            <small>Servicio base: L. <?= number_format($v['costo'], 2) ?></small>
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-3"><span class="badge bg-warning text-dark me-2">1</span>Tipo de vehículo</h5>
+                        <div class="row g-3">
+                            <?php foreach ($vehiculos as $v) {
+                                $icono = "bi-car-front-fill";
+                                if ($v['nombre'] == "SUV") {
+                                    $icono = "bi-truck-front-fill";
+                                }
+                                if ($v['nombre'] == "Pick-Up 4x4") {
+                                    $icono = "bi-truck";
+                                }
+                            ?>
+                                <div class="col-12 col-md-4">
+                                    <!-- value = id: esto es lo que viaja al servidor.
+                                         data-precio solo sirve para mostrar el resumen en pantalla. -->
+                                    <input type="radio" class="btn-check" name="vehiculo" id="vehiculo_<?= $v['id'] ?>"
+                                           value="<?= $v['id'] ?>"
+                                           data-nombre="<?= $v['nombre'] ?>" data-precio="<?= $v['costo'] ?>"
+                                           <?php if ($v['nombre'] == $vehiculoElegido) { echo 'checked'; } ?>>
+                                    <label class="btn btn-outline-warning text-dark w-100 h-100 d-flex flex-column align-items-center p-3" for="vehiculo_<?= $v['id'] ?>">
+                                        <i class="bi <?= $icono ?> fs-1"></i>
+                                        <span class="fw-bold fs-5"><?= $v['nombre'] ?></span>
+                                        <small>Servicio base: L. <?= number_format((float)$v['costo'], 2) ?></small>
+                                    </label>
+                                </div>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-3"><span class="badge bg-warning text-dark me-2">2</span>Aceite de motor</h5>
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                                <label for="marcaAceite" class="form-label">Marca</label>
+                                <select id="marcaAceite" name="marca" class="form-select">
+                                    <?php foreach ($marcas as $m) { ?>
+                                        <option value="<?= $m['id'] ?>" data-nombre="<?= $m['nombre'] ?>" data-precio="<?= $m['costo'] ?>">
+                                            <?= $m['nombre'] ?> (+ L. <?= number_format((float)$m['costo'], 2) ?>)
+                                        </option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label for="viscosidad" class="form-label">Viscosidad</label>
+                                <select id="viscosidad" name="viscosidad" class="form-select">
+                                    <?php foreach ($viscosidades as $vis) { ?>
+                                        <option value="<?= $vis['id'] ?>" data-nombre="<?= $vis['nombre'] ?>"><?= $vis['nombre'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-3"><span class="badge bg-warning text-dark me-2">3</span>Filtros</h5>
+                        <div class="row g-3">
+                            <?php foreach ($filtros as $f) { ?>
+                                <div class="col-12 col-md-6">
+                                    <div class="form-check border rounded p-3 ps-5">
+                                        <!-- name con [] para que PHP reciba una lista de ids -->
+                                        <input class="form-check-input opcion-extra" type="checkbox" id="filtro_<?= $f['id'] ?>"
+                                               name="filtros[]" value="<?= $f['id'] ?>"
+                                               data-nombre="<?= $f['nombre'] ?>" data-precio="<?= $f['costo'] ?>"
+                                               <?php if ($f['nombre'] == 'Filtro de aceite' || $f['nombre'] == 'Filtro de aire') { echo 'checked'; } ?>>
+                                        <label class="form-check-label w-100 d-flex justify-content-between" for="filtro_<?= $f['id'] ?>">
+                                            <span><?= $f['nombre'] ?></span>
+                                            <span class="fw-bold">+ L. <?= number_format((float)$f['costo'], 2) ?></span>
                                         </label>
                                     </div>
-                                <?php } ?>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-body">
-                            <h5 class="fw-bold mb-3"><span class="badge bg-warning text-dark me-2">2</span>Aceite de motor</h5>
-                            <div class="row g-3">
-                                <div class="col-12 col-md-6">
-                                    <label for="marcaAceite" class="form-label">Marca</label>
-                                    <select id="marcaAceite" class="form-select">
-                                        <?php foreach ($marcas as $m) { ?>
-                                            <option value="<?= $m['nombre'] ?>" data-precio="<?= $m['costo'] ?>">
-                                                <?= $m['nombre'] ?> (+ L. <?= number_format($m['costo'], 2) ?>)
-                                            </option>
-                                        <?php } ?>
-                                    </select>
                                 </div>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-1"><span class="badge bg-warning text-dark me-2">4</span>Repuestos adicionales</h5>
+                        <p class="small text-secondary">Cada uno tiene su costo extra.</p>
+                        <div class="row g-3">
+                            <?php foreach ($extras as $e) { ?>
                                 <div class="col-12 col-md-6">
-                                    <label for="viscosidad" class="form-label">Viscosidad</label>
-                                    <select id="viscosidad" class="form-select">
-                                        <?php foreach ($viscosidades as $vis) { ?>
-                                            <option value="<?= $vis['nombre'] ?>"><?= $vis['nombre'] ?></option>
-                                        <?php } ?>
-                                    </select>
+                                    <div class="form-check border rounded p-3 ps-5">
+                                        <input class="form-check-input opcion-extra" type="checkbox"
+                                               id="extra_<?= $e['id'] ?>"
+                                               name="extras[]" value="<?= $e['id'] ?>"
+                                               data-nombre="<?= $e['nombre'] ?>"
+                                               data-precio="<?= $e['costo'] ?>">
+                                        <label class="form-check-label w-100 d-flex justify-content-between" for="extra_<?= $e['id'] ?>">
+                                            <span><?= $e['nombre'] ?></span>
+                                            <span class="fw-bold">+ L. <?= number_format((float)$e['costo'], 2) ?></span>
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
+                            <?php } ?>
                         </div>
                     </div>
-
-                    <div class="card shadow-sm mb-4">
-                        <div class="card-body">
-                            <h5 class="fw-bold mb-3"><span class="badge bg-warning text-dark me-2">3</span>Filtros</h5>
-                            <div class="row g-3">
-                                <?php foreach ($filtros as $f) { ?>
-                                    <div class="col-12 col-md-6">
-                                        <div class="form-check border rounded p-3 ps-5">
-                                            <input class="form-check-input opcion-extra" type="checkbox" id="filtro_<?= $f['id'] ?>" data-nombre="<?= $f['nombre'] ?>" data-precio="<?= $f['costo'] ?>"
-                                                <?php if ($f['nombre'] == 'Filtro de aceite' || $f['nombre'] == 'Filtro de aire') { echo 'checked'; } ?>>
-                                            <label class="form-check-label w-100 d-flex justify-content-between" for="filtro_<?= $f['id'] ?>">
-                                                <span><?= $f['nombre'] ?></span>
-                                                <span class="fw-bold">+ L. <?= number_format($f['costo'], 2) ?></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                <?php } ?>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h5 class="fw-bold mb-1"><span class="badge bg-warning text-dark me-2">4</span>Repuestos adicionales</h5>
-                            <p class="small text-secondary">Cada uno tiene su costo extra.</p>
-                            <div class="row g-3">
-                                <?php foreach ($extras as $e) { ?>
-                                    <div class="col-12 col-md-6">
-                                        <div class="form-check border rounded p-3 ps-5">
-                                            <input class="form-check-input opcion-extra" type="checkbox"
-                                                id="extra_<?= $e['id'] ?>"
-                                                data-nombre="<?= $e['nombre'] ?>"
-                                                data-precio="<?= $e['costo'] ?>">
-                                            <label class="form-check-label w-100 d-flex justify-content-between" for="extra_<?= $e['id'] ?>">
-                                                <span><?= $e['nombre'] ?></span>
-                                                <span class="fw-bold">+ L. <?= number_format($e['costo'], 2) ?></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                <?php } ?>
-                            </div>
-                        </div>
-                    </div>
+                </div>
 
                 </div>
 
@@ -179,13 +200,20 @@ if ($parametro == 'suv') {
                                 <span id="total" class="fs-3 fw-bold text-warning">L. 0.00</span>
                             </div>
 
-                            <button type="button" id="btnAgregar" class="btn btn-warning w-100 fw-bold">
-                                <i class="bi bi-cart-plus"></i> Agregar kit al carrito
-                            </button>
-                            <p id="mensaje" class="small fw-bold text-success mt-3 mb-0"></p>
-                        </div>
+                        <!-- Ahora es un botón submit: envía el formulario -->
+                        <button type="submit" class="btn btn-warning w-100 fw-bold">
+                            <i class="bi bi-cart-plus"></i> Agregar kit al carrito
+                        </button>
+
+                        <?php if ($mensaje != '') { ?>
+                            <p class="small fw-bold text-success mt-3 mb-0"><?= $mensaje ?></p>
+                        <?php } ?>
+                        <?php if ($mensajeError != '') { ?>
+                            <p class="small fw-bold text-danger mt-3 mb-0"><?= $mensajeError ?></p>
+                        <?php } ?>
                     </div>
                 </div>
+            </div>
 
             </form>
         </main>
@@ -236,16 +264,19 @@ if ($parametro == 'suv') {
                 return 'L. ' + numero.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             }
 
-            function armarKit() {
-                var lista = [];
+        // Esto es SOLO para mostrar el resumen en pantalla.
+        // El precio real lo calcula PHP en agregar_kit.php.
+        function armarKit() {
+            var lista = [];
 
                 var vehiculo = document.querySelector('input[name="vehiculo"]:checked');
                 lista.push({ nombre: 'Servicio base - ' + vehiculo.dataset.nombre, precio: Number(vehiculo.dataset.precio) });
 
-                var marca = document.getElementById('marcaAceite');
-                var viscosidad = document.getElementById('viscosidad');
-                var marcaElegida = marca.options[marca.selectedIndex];
-                lista.push({ nombre: 'Aceite ' + marca.value + ' ' + viscosidad.value, precio: Number(marcaElegida.dataset.precio) });
+            var marca = document.getElementById('marcaAceite');
+            var viscosidad = document.getElementById('viscosidad');
+            var marcaElegida = marca.options[marca.selectedIndex];
+            var viscosidadElegida = viscosidad.options[viscosidad.selectedIndex];
+            lista.push({ nombre: 'Aceite ' + marcaElegida.dataset.nombre + ' ' + viscosidadElegida.dataset.nombre, precio: Number(marcaElegida.dataset.precio) });
 
                 var marcados = document.querySelectorAll('.opcion-extra:checked');
                 for (var i = 0; i < marcados.length; i++) {
@@ -275,17 +306,8 @@ if ($parametro == 'suv') {
                 document.getElementById('total').textContent = aLempiras(kit.total);
             }
 
-            document.getElementById('formKit').addEventListener('change', mostrarResumen);
-            mostrarResumen();
-
-            document.getElementById('btnAgregar').addEventListener('click', function () {
-                var kit = armarKit();
-                var carrito = JSON.parse(localStorage.getItem('carritoKits') || '[]');
-                carrito.push(kit);
-                localStorage.setItem('carritoKits', JSON.stringify(carrito));
-
-                document.getElementById('mensaje').textContent = 'Kit agregado al carrito por ' + aLempiras(kit.total);
-            });
-        </script>
-    </body>
+        document.getElementById('formKit').addEventListener('change', mostrarResumen);
+        mostrarResumen();
+    </script>
+</body>
 </html>
