@@ -1,3 +1,12 @@
+<?php
+declare(strict_types=1);
+require_once __DIR__ . '/../classes/producto.php';
+require_once __DIR__ . '/../classes/marcas.php';
+
+$destacados = (new Producto())->destacados(5);
+$marcas     = (new Marca())->todas();
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -154,81 +163,38 @@
             </div>
 
             <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-5 g-4">
-                <div class="col">
-                    <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
-                        <img class="card-img-top" src="../img/Pastillas-freno.webp" alt="Pastillas de freno cerámicas"
-                        style="height: 160px; object-fit: cover;">
-                        <div class="card-body d-flex flex-column p-3">
-                            <span class="badge rounded-pill bg-primary align-self-start mb-2">Frenos y Suspensión</span>
-                            <h6 class="card-title fw-bold">Pastillas de freno cerámicas</h6>
-                            <div class="border-top pt-3 mt-auto d-flex justify-content-between align-items-center">
-                                <span class="fs-5 fw-bold text-primary">L. 850.00</span>
-                                <a href="catalogo.php" class="btn btn-sm rounded-pill btn-outline-primary">Ver</a>
+                <?php if (empty($destacados)): ?>
+                    <div class="col-12 text-center text-muted">Aún no hay repuestos destacados.</div>
+                <?php endif; ?>
+
+                <?php foreach ($destacados as $p): ?>
+                    <div class="col">
+                        <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
+                            <?php $foto = $p['fotografia'] ?? ''; ?>
+                            <?php if ($foto !== ''): ?>
+                                <img class="card-img-top"
+                                    src="../uploads/<?= htmlspecialchars($foto) ?>"
+                                    alt="<?= htmlspecialchars($p['nombre'] ?? '') ?>"
+                                    style="height: 160px; object-fit: cover;">
+                            <?php else: ?>
+                                <div class="bg-secondary-subtle d-flex align-items-center justify-content-center"
+                                    style="height: 160px;">
+                                    <i class="bi bi-image fs-1 text-secondary"></i>
+                                </div>
+                            <?php endif; ?>
+                            <div class="card-body d-flex flex-column p-3">
+                                <span class="badge rounded-pill bg-primary align-self-start mb-2">
+                                    <?= htmlspecialchars($p['categoria']) ?>
+                                </span>
+                                <h6 class="card-title fw-bold"><?= htmlspecialchars($p['nombre']) ?></h6>
+                                <div class="border-top pt-3 mt-auto d-flex justify-content-between align-items-center">
+                                    <span class="fs-5 fw-bold text-primary">L. <?= number_format((float)$p['precio'], 2) ?></span>
+                                    <a href="catalogo.php?id=<?= (int)$p['id'] ?>" class="btn btn-sm rounded-pill btn-outline-primary">Ver</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="col">
-                    <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
-                        <img class="card-img-top" src="../img/Filtro-aceite.webp" alt="Filtro de aceite"
-                        style="height: 160px; object-fit: cover;">
-                        <div class="card-body d-flex flex-column p-3">
-                            <span class="badge rounded-pill bg-primary align-self-start mb-2">Motor y Transmisión</span>
-                            <h6 class="card-title fw-bold">Filtro de aceite</h6>
-                            <div class="border-top pt-3 mt-auto d-flex justify-content-between align-items-center">
-                                <span class="fs-5 fw-bold text-primary">L. 180.00</span>
-                                <a href="catalogo.php" class="btn btn-sm rounded-pill btn-outline-primary">Ver</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
-                        <img class="card-img-top" src="../img/bujillas.jpg" alt="Bujias"
-                        style="height: 160px; object-fit: cover;">
-                        <div class="card-body d-flex flex-column p-3">
-                            <span class="badge rounded-pill bg-primary align-self-start mb-2">Sistema Eléctrico</span>
-                            <h6 class="card-title fw-bold">Bujías de iridio (juego)</h6>
-                            <div class="border-top pt-3 mt-auto d-flex justify-content-between align-items-center">
-                                <span class="fs-5 fw-bold text-primary">L. 1,200.00</span>
-                                <a href="catalogo.php" class="btn btn-sm rounded-pill btn-outline-primary">Ver</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
-                        <img class="card-img-top" src="../img/aceite.webp" alt="Aceite Castrol"
-                        style="height: 160px; object-fit: cover;">
-                        <div class="card-body d-flex flex-column p-3">
-                            <span class="badge rounded-pill bg-primary align-self-start mb-2">Fluidos y Lubricantes</span>
-                            <h6 class="card-title fw-bold">Aceite sintético 5W-30</h6>
-                            <div class="border-top pt-3 mt-auto d-flex justify-content-between align-items-center">
-                                <span class="fs-5 fw-bold text-primary">L. 650.00</span>
-                                <a href="catalogo.php" class="btn btn-sm rounded-pill btn-outline-primary">Ver</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
-                        <img class="card-img-top" src="../img/refrigerante-castrol.jpg" alt="Refrigerante"
-                        style="height: 160px; object-fit: cover;">
-                        <div class="card-body d-flex flex-column p-3">
-                            <span class="badge rounded-pill bg-primary align-self-start mb-2">Fluidos y Lubricantes</span>
-                            <h6 class="card-title fw-bold">Refrigerante concentrado</h6>
-                            <div class="border-top pt-3 mt-auto d-flex justify-content-between align-items-center">
-                                <span class="fs-5 fw-bold text-primary">L. 320.00</span>
-                                <a href="catalogo.php" class="btn btn-sm rounded-pill btn-outline-primary">Ver</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                <?php endforeach; ?>
             </div>
 
             <div class="text-center mt-5">
