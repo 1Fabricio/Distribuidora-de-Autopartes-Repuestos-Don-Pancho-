@@ -29,7 +29,7 @@
                         <a href="catalogo.php" class="nav-link px-3">Catálogo</a>
                     </li>
                     <li class="nav-item">
-                        <a href="kitTuneup.php" class="nav-link px-3">Kit Tune-Up</a>
+                        <a href="kitTune.php" class="nav-link px-3">Kit Tune-Up</a>
                     </li>
                     <li class="nav-item">
                         <a href="sucursales.php" class="nav-link px-3">Sucursales</a>
@@ -66,7 +66,7 @@
                         <a class="btn btn-lg rounded-pill px-4 fw-bold btn-warning" href="catalogo.php">
                             <i class="bi bi-grid-3x3-gap-fill"></i> Ver Catálogo
                         </a>
-                        <a class="btn btn-lg rounded-pill px-4 btn-outline-light" href="kit-tuneup.php">
+                        <a class="btn btn-lg rounded-pill px-4 btn-outline-light" href="kitTune.php">
                             <i class="bi bi-wrench-adjustable"></i> Arma tu Kit Tune-Up
                         </a>
                     </div>
@@ -78,13 +78,13 @@
                             <h5 class="card-title fw-bold mb-1">Cotiza tu mantenimiento</h5>
                             <p class="card-text small text-secondary">¿Qué tipo de vehículo tienes?</p>
                             <div class="list-group">
-                                <a href="kit-tuneup.php?vehiculo=sedan" class="list-group-item list-group-item-action d-flex align-items-center gap-3">
+                                <a href="kitTune.php?vehiculo=sedan" class="list-group-item list-group-item-action d-flex align-items-center gap-3">
                                     <i class="bi bi-car-front fs-4"></i> Sedán
                                 </a>
-                                <a href="kit-tuneup.php?vehiculo=suv" class="list-group-item list-group-item-action d-flex align-items-center gap-3">
+                                <a href="kitTune.php?vehiculo=suv" class="list-group-item list-group-item-action d-flex align-items-center gap-3">
                                     <i class="bi bi-truck-front fs-4"></i> SUV
                                 </a>
-                                <a href="kit-tuneup.php?vehiculo=pickup" class="list-group-item list-group-item-action d-flex align-items-center gap-3">
+                                <a href="kitTune.php?vehiculo=pickup" class="list-group-item list-group-item-action d-flex align-items-center gap-3">
                                     <i class="bi bi-truck fs-4"></i> Pick-Up 4x4
                                 </a>
                             </div>
@@ -283,7 +283,7 @@
                     <h6>Enlaces</h6>
                     <ul class="list-unstyled small">
                         <li><a class="link-light link-underline-opacity-0" href="catalogo.php">Catálogo</a></li>
-                        <li><a class="link-light link-underline-opacity-0" href="kit-tuneup.php">Kit Tune-Up</a></li>
+                        <li><a class="link-light link-underline-opacity-0" href="kitTune.php">Kit Tune-Up</a></li>
                         <li><a class="link-light link-underline-opacity-0" href="sucursales.php">Sucursales</a></li>
                         <li><a class="link-light link-underline-opacity-0" href="login.php">Iniciar Sesión</a></li>
                     </ul>

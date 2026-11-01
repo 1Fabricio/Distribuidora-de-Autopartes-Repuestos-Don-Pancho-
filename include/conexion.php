@@ -1,38 +1,36 @@
 <?php
 declare(strict_types=1);
 
-class ConexionBD
-{
-    private string $host    = "localhost";
-    private string $db      = "don_pancho"; 
-    private string $user    = "root";       
-    private string $pass    = "";            
-    private string $charset = "utf8mb4";
+    class ConexionBD{
+        private string $host = "localhost";
+        private string $db = "don_pancho";
+        private string $user = "root";
+        private string $pass = "";
+        private string $charset = "utf8mb4";
 
-    private static ?PDO $pdo = null;
+        public function conectar(): ?PDO {
+            //Cadena DSN
+            $dsn = "mysql:host={$this->host}; dbname={$this->db};charset={$this->charset}";
 
-    public function conectar(): PDO
-    {
-        if (self::$pdo !== null) {
-            return self::$pdo;
-        }
+            $opciones = [
+                PDO::ATTR_ERRMODE              => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE   => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES     => false,
+            ];
 
-        // Cadena DSN
-        $dsn = "mysql:host={$this->host};dbname={$this->db};charset={$this->charset}";
+            try {
+                $pdo = new PDO($dsn, $this->user,$this->pass,$opciones);
+                
+                return $pdo;
 
-        $opciones = [
-            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES   => false,
-        ];
+            } catch (PDOException $e){
+                error_log("Fallo critico en conexion BD: ". $e->getMessage());
 
-        try {
-            self::$pdo = new PDO($dsn, $this->user, $this->pass, $opciones);
-            return self::$pdo;
+                echo "<div style='color:red;background:#fee2e2;padding:1Spx;border-radius:Bpx;'>
+                <strong>Error de conexcion:<strong>No se pudo conectar a la base de datos </div>";
 
-        } catch (PDOException $e) {
-            error_log("Fallo crítico en conexión BD: " . $e->getMessage());
-            throw new PDOException("No se pudo conectar a la base de datos.", (int)$e->getCode());
+
+            }
         }
     }
-}
+?>
