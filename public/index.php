@@ -1,14 +1,16 @@
 <?php
 declare(strict_types=1);
+require_once __DIR__ . '/../include/auth.php';
 require_once __DIR__ . '/../classes/producto.php';
 require_once __DIR__ . '/../classes/marcas.php';
 
 $destacados = (new Producto())->destacados(5);
-$marcas     = (new Marca())->todas();
+$marcas = (new Marca())->todas();
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,45 +18,9 @@ $marcas     = (new Marca())->todas();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
+
 <body>
-    <nav class="navbar navbar-expand-lg sticky-top shadow-sm py-3 bg-dark" data-bs-theme="dark">
-        <div class="container">
-
-            <a class="navbar-brand d-flex align-items-center fw-bold fs-4" href="index.php">
-                <i class="bi bi-gear-wide-connected text-warning me-2"></i>
-                <span>Don Pancho <span class="badge bg-warning text-dark fs-6">Honduras</span></span>
-            </a>
-
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavegacion" aria-controls="menuNavegacion" aria-expanded="false" aria-label="Abrir navegación">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="menuNavegacion">
-                <ul class="navbar-nav ms-auto align-items-lg-center">
-                    <li class="nav-item">
-                        <a href="index.php" class="nav-link px-3 active">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="catalogo.php" class="nav-link px-3">Catálogo</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="kitTune.php" class="nav-link px-3">Kit Tune-Up</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="sucursales.php" class="nav-link px-3">Sucursales</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="carrito.php" class="nav-link px-3"><i class="bi bi-cart3"></i> Carrito</a>
-                    </li>
-
-                    <li class="nav-item ms-lg-2">
-                        <a href="login.php" class="btn btn-warning rounded-pill px-4 fw-bold">Iniciar Sesión</a>
-                    </li>
-                </ul>
-            </div>
-
-        </div>
-    </nav>
+    <?php require __DIR__ . '/../include/navbar.php'; ?>
 
     <header class="py-5 bg-dark text-white" id="inicio">
         <div class="container py-lg-4">
@@ -69,7 +35,8 @@ $marcas     = (new Marca())->todas();
                     </h1>
                     <p class="lead mb-4">
                         Piezas originales y de reemplazo para vehículos japoneses, coreanos y americanos.
-                        Arma tu kit de mantenimiento, paga con factura fiscal SAR y recibe tu pedido en moto o camioncito.
+                        Arma tu kit de mantenimiento, paga con factura fiscal SAR y recibe tu pedido en moto o
+                        camioncito.
                     </p>
                     <div class="d-flex flex-wrap gap-3">
                         <a class="btn btn-lg rounded-pill px-4 fw-bold btn-warning" href="catalogo.php">
@@ -87,13 +54,16 @@ $marcas     = (new Marca())->todas();
                             <h5 class="card-title fw-bold mb-1">Cotiza tu mantenimiento</h5>
                             <p class="card-text small text-secondary">¿Qué tipo de vehículo tienes?</p>
                             <div class="list-group">
-                                <a href="kitTune.php?vehiculo=sedan" class="list-group-item list-group-item-action d-flex align-items-center gap-3">
+                                <a href="kitTune.php?vehiculo=sedan"
+                                    class="list-group-item list-group-item-action d-flex align-items-center gap-3">
                                     <i class="bi bi-car-front fs-4"></i> Sedán
                                 </a>
-                                <a href="kitTune.php?vehiculo=suv" class="list-group-item list-group-item-action d-flex align-items-center gap-3">
+                                <a href="kitTune.php?vehiculo=suv"
+                                    class="list-group-item list-group-item-action d-flex align-items-center gap-3">
                                     <i class="bi bi-truck-front fs-4"></i> SUV
                                 </a>
-                                <a href="kitTune.php?vehiculo=pickup" class="list-group-item list-group-item-action d-flex align-items-center gap-3">
+                                <a href="kitTune.php?vehiculo=pickup"
+                                    class="list-group-item list-group-item-action d-flex align-items-center gap-3">
                                     <i class="bi bi-truck fs-4"></i> Pick-Up 4x4
                                 </a>
                             </div>
@@ -124,7 +94,8 @@ $marcas     = (new Marca())->todas();
                         <div class="card-body">
                             <i class="bi bi-car-front-fill fs-1 mb-2 d-block text-success"></i>
                             <h3 class="fw-bold mb-1">6 Marcas Aliadas</h3>
-                            <p class="text-muted small mb-0">Repuestos para vehículos japoneses, coreanos y americanos</p>
+                            <p class="text-muted small mb-0">Repuestos para vehículos japoneses, coreanos y americanos
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -157,7 +128,8 @@ $marcas     = (new Marca())->todas();
         <div class="container py-lg-4">
 
             <div class="text-center mb-5">
-                <span class="badge rounded-pill px-3 py-2 text-uppercase fw-bold bg-warning text-dark">Más Buscados</span>
+                <span class="badge rounded-pill px-3 py-2 text-uppercase fw-bold bg-warning text-dark">Más
+                    Buscados</span>
                 <h2 class="display-6 fw-bold mt-2">Repuestos Destacados</h2>
                 <p class="text-muted">Los repuestos que más piden talleres y clientes en nuestras sucursales.</p>
             </div>
@@ -172,10 +144,8 @@ $marcas     = (new Marca())->todas();
                         <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
                             <?php $foto = $p['fotografia'] ?? ''; ?>
                             <?php if ($foto !== ''): ?>
-                                <img class="card-img-top"
-                                    src="../uploads/<?= htmlspecialchars($foto) ?>"
-                                    alt="<?= htmlspecialchars($p['nombre'] ?? '') ?>"
-                                    style="height: 160px; object-fit: cover;">
+                                <img class="card-img-top" src="../uploads/<?= htmlspecialchars($foto) ?>"
+                                    alt="<?= htmlspecialchars($p['nombre'] ?? '') ?>" style="height: 160px; object-fit: cover;">
                             <?php else: ?>
                                 <div class="bg-secondary-subtle d-flex align-items-center justify-content-center"
                                     style="height: 160px;">
@@ -188,8 +158,10 @@ $marcas     = (new Marca())->todas();
                                 </span>
                                 <h6 class="card-title fw-bold"><?= htmlspecialchars($p['nombre']) ?></h6>
                                 <div class="border-top pt-3 mt-auto d-flex justify-content-between align-items-center">
-                                    <span class="fs-5 fw-bold text-primary">L. <?= number_format((float)$p['precio'], 2) ?></span>
-                                    <a href="catalogo.php?id=<?= (int)$p['id'] ?>" class="btn btn-sm rounded-pill btn-outline-primary">Ver</a>
+                                    <span class="fs-5 fw-bold text-primary">L.
+                                        <?= number_format((float) $p['precio'], 2) ?></span>
+                                    <a href="catalogo.php?id=<?= (int) $p['id'] ?>"
+                                        class="btn btn-sm rounded-pill btn-outline-primary">Ver</a>
                                 </div>
                             </div>
                         </div>
@@ -213,12 +185,24 @@ $marcas     = (new Marca())->todas();
             </div>
 
             <div class="row row-cols-2 row-cols-md-3 row-cols-lg-6 g-3 text-center">
-                <div class="col"><div class="card border-0 shadow-sm rounded-4 py-3 bg-light fw-bold fs-5">Toyota</div></div>
-                <div class="col"><div class="card border-0 shadow-sm rounded-4 py-3 bg-light fw-bold fs-5">Nissan</div></div>
-                <div class="col"><div class="card border-0 shadow-sm rounded-4 py-3 bg-light fw-bold fs-5">Honda</div></div>
-                <div class="col"><div class="card border-0 shadow-sm rounded-4 py-3 bg-light fw-bold fs-5">Hyundai</div></div>
-                <div class="col"><div class="card border-0 shadow-sm rounded-4 py-3 bg-light fw-bold fs-5">Isuzu</div></div>
-                <div class="col"><div class="card border-0 shadow-sm rounded-4 py-3 bg-light fw-bold fs-5">Ford</div></div>
+                <div class="col">
+                    <div class="card border-0 shadow-sm rounded-4 py-3 bg-light fw-bold fs-5">Toyota</div>
+                </div>
+                <div class="col">
+                    <div class="card border-0 shadow-sm rounded-4 py-3 bg-light fw-bold fs-5">Nissan</div>
+                </div>
+                <div class="col">
+                    <div class="card border-0 shadow-sm rounded-4 py-3 bg-light fw-bold fs-5">Honda</div>
+                </div>
+                <div class="col">
+                    <div class="card border-0 shadow-sm rounded-4 py-3 bg-light fw-bold fs-5">Hyundai</div>
+                </div>
+                <div class="col">
+                    <div class="card border-0 shadow-sm rounded-4 py-3 bg-light fw-bold fs-5">Isuzu</div>
+                </div>
+                <div class="col">
+                    <div class="card border-0 shadow-sm rounded-4 py-3 bg-light fw-bold fs-5">Ford</div>
+                </div>
             </div>
 
         </div>
@@ -229,9 +213,11 @@ $marcas     = (new Marca())->todas();
             <div class="row g-4">
 
                 <div class="col-12 col-md-4">
-                    <h5><i class="bi bi-gear-wide-connected text-warning"></i> Autopartes &amp; Repuestos "Don Pancho"</h5>
+                    <h5><i class="bi bi-gear-wide-connected text-warning"></i> Autopartes &amp; Repuestos "Don Pancho"
+                    </h5>
                     <p class="small text-secondary">
-                        Distribuidora de piezas originales y de reemplazo para vehículos japoneses, coreanos y americanos en Honduras.
+                        Distribuidora de piezas originales y de reemplazo para vehículos japoneses, coreanos y
+                        americanos en Honduras.
                     </p>
                 </div>
 
@@ -266,4 +252,5 @@ $marcas     = (new Marca())->todas();
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

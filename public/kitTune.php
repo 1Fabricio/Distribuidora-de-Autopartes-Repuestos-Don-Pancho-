@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../include/auth.php';
 require_once __DIR__ . '/../include/conexion.php';
 
 $conexion = new ConexionBD();
@@ -30,298 +31,261 @@ if ($parametro == 'suv') {
 ?>
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arma tu Kit Tune-Up | Autopartes &amp; Repuestos "Don Pancho"</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-</head>
-<body class="d-flex flex-column min-vh-100">
-    <nav class="navbar navbar-expand-lg sticky-top shadow-sm py-3 bg-dark" data-bs-theme="dark">
-        <div class="container">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Arma tu Kit Tune-Up | Autopartes &amp; Repuestos "Don Pancho"</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    </head>
+    <body class="d-flex flex-column min-vh-100">
+        <?php require __DIR__ . '/../include/navbar.php'; ?>
 
-            <a class="navbar-brand d-flex align-items-center fw-bold fs-4" href="index.php">
-                <i class="bi bi-gear-wide-connected text-warning me-2"></i>
-                <span>Don Pancho <span class="badge bg-warning text-dark fs-6">Honduras</span></span>
-            </a>
+        <header class="py-5 bg-dark text-white">
+            <div class="container">
+                <div class="row align-items-center g-4">
 
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavegacion" aria-controls="menuNavegacion" aria-expanded="false" aria-label="Abrir navegación">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="menuNavegacion">
-                <ul class="navbar-nav ms-auto align-items-lg-center">
-                    <li class="nav-item">
-                        <a href="index.php" class="nav-link px-3">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="catalogo.php" class="nav-link px-3">Catálogo</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="kitTune.php" class="nav-link px-3 active">Kit Tune-Up</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="sucursales.php" class="nav-link px-3">Sucursales</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="carrito.php" class="nav-link px-3"><i class="bi bi-cart3"></i> Carrito</a>
-                    </li>
-
-                    <li class="nav-item ms-lg-2">
-                        <a href="login.php" class="btn btn-warning rounded-pill px-4 fw-bold">Iniciar Sesión</a>
-                    </li>
-                </ul>
-            </div>
-
-        </div>
-    </nav>
-
-    <header class="py-5 bg-dark text-white">
-        <div class="container">
-            <div class="row align-items-center g-4">
-
-                <div class="col-12 col-lg-7">
-                    <p class="text-uppercase fw-bold mb-0">Arma tu</p>
-                    <h1 class="display-4 fw-bold text-warning">Kit Tune-Up <i class="bi bi-wrench-adjustable"></i></h1>
-                    <p class="lead mb-0">Elige tus opciones y mira el total al instante.</p>
-                </div>
-
-                <div class="col-12 col-lg-5">
-                    <div class="border border-secondary rounded p-3">
-                        <p class="mb-2"><i class="bi bi-speedometer2 text-warning me-2"></i> Más rendimiento</p>
-                        <p class="mb-2"><i class="bi bi-shield-check text-warning me-2"></i> Mayor duración</p>
-                        <p class="mb-0"><i class="bi bi-gear-fill text-warning me-2"></i> Protege tu motor</p>
+                    <div class="col-12 col-lg-7">
+                        <p class="text-uppercase fw-bold mb-0">Arma tu</p>
+                        <h1 class="display-4 fw-bold text-warning">Kit Tune-Up <i class="bi bi-wrench-adjustable"></i></h1>
+                        <p class="lead mb-0">Elige tus opciones y mira el total al instante.</p>
                     </div>
-                </div>
 
-            </div>
-        </div>
-    </header>
-
-    <main class="container my-5">
-
-        <form id="formKit" class="row g-4">
-
-            <div class="col-12 col-lg-8">
-
-                <div class="card shadow-sm mb-4">
-                    <div class="card-body">
-                        <h5 class="fw-bold mb-3"><span class="badge bg-warning text-dark me-2">1</span>Tipo de vehículo</h5>
-                        <div class="row g-3">
-                            <?php foreach ($vehiculos as $v) {
-                                $icono = "bi-car-front-fill";
-                                if ($v['nombre'] == "SUV") {
-                                    $icono = "bi-truck-front-fill";
-                                }
-                                if ($v['nombre'] == "Pick-Up 4x4") {
-                                    $icono = "bi-truck";
-                                }
-                            ?>
-                                <div class="col-12 col-md-4">
-                                    <input type="radio" class="btn-check" name="vehiculo" id="vehiculo_<?= $v['id'] ?>" data-nombre="<?= $v['nombre'] ?>" data-precio="<?= $v['costo'] ?>"
-                                           <?php if ($v['nombre'] == $vehiculoElegido) { echo 'checked'; } ?>>
-                                    <label class="btn btn-outline-warning text-dark w-100 h-100 d-flex flex-column align-items-center p-3" for="vehiculo_<?= $v['id'] ?>">
-                                        <i class="bi <?= $icono ?> fs-1"></i>
-                                        <span class="fw-bold fs-5"><?= $v['nombre'] ?></span>
-                                        <small>Servicio base: L. <?= number_format($v['costo'], 2) ?></small>
-                                    </label>
-                                </div>
-                            <?php } ?>
+                    <div class="col-12 col-lg-5">
+                        <div class="border border-secondary rounded p-3">
+                            <p class="mb-2"><i class="bi bi-speedometer2 text-warning me-2"></i> Más rendimiento</p>
+                            <p class="mb-2"><i class="bi bi-shield-check text-warning me-2"></i> Mayor duración</p>
+                            <p class="mb-0"><i class="bi bi-gear-fill text-warning me-2"></i> Protege tu motor</p>
                         </div>
                     </div>
-                </div>
 
-                <div class="card shadow-sm mb-4">
-                    <div class="card-body">
-                        <h5 class="fw-bold mb-3"><span class="badge bg-warning text-dark me-2">2</span>Aceite de motor</h5>
-                        <div class="row g-3">
-                            <div class="col-12 col-md-6">
-                                <label for="marcaAceite" class="form-label">Marca</label>
-                                <select id="marcaAceite" class="form-select">
-                                    <?php foreach ($marcas as $m) { ?>
-                                        <option value="<?= $m['nombre'] ?>" data-precio="<?= $m['costo'] ?>">
-                                            <?= $m['nombre'] ?> (+ L. <?= number_format($m['costo'], 2) ?>)
-                                        </option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <label for="viscosidad" class="form-label">Viscosidad</label>
-                                <select id="viscosidad" class="form-select">
-                                    <?php foreach ($viscosidades as $vis) { ?>
-                                        <option value="<?= $vis['nombre'] ?>"><?= $vis['nombre'] ?></option>
-                                    <?php } ?>
-                                </select>
+                </div>
+            </div>
+        </header>
+
+        <main class="container my-5">
+
+            <form id="formKit" class="row g-4">
+
+                <div class="col-12 col-lg-8">
+
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <h5 class="fw-bold mb-3"><span class="badge bg-warning text-dark me-2">1</span>Tipo de vehículo</h5>
+                            <div class="row g-3">
+                                <?php foreach ($vehiculos as $v) {
+                                    $icono = "bi-car-front-fill";
+                                    if ($v['nombre'] == "SUV") {
+                                        $icono = "bi-truck-front-fill";
+                                    }
+                                    if ($v['nombre'] == "Pick-Up 4x4") {
+                                        $icono = "bi-truck";
+                                    }
+                                ?>
+                                    <div class="col-12 col-md-4">
+                                        <input type="radio" class="btn-check" name="vehiculo" id="vehiculo_<?= $v['id'] ?>" data-nombre="<?= $v['nombre'] ?>" data-precio="<?= $v['costo'] ?>"
+                                            <?php if ($v['nombre'] == $vehiculoElegido) { echo 'checked'; } ?>>
+                                        <label class="btn btn-outline-warning text-dark w-100 h-100 d-flex flex-column align-items-center p-3" for="vehiculo_<?= $v['id'] ?>">
+                                            <i class="bi <?= $icono ?> fs-1"></i>
+                                            <span class="fw-bold fs-5"><?= $v['nombre'] ?></span>
+                                            <small>Servicio base: L. <?= number_format($v['costo'], 2) ?></small>
+                                        </label>
+                                    </div>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="card shadow-sm mb-4">
-                    <div class="card-body">
-                        <h5 class="fw-bold mb-3"><span class="badge bg-warning text-dark me-2">3</span>Filtros</h5>
-                        <div class="row g-3">
-                            <?php foreach ($filtros as $f) { ?>
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <h5 class="fw-bold mb-3"><span class="badge bg-warning text-dark me-2">2</span>Aceite de motor</h5>
+                            <div class="row g-3">
                                 <div class="col-12 col-md-6">
-                                    <div class="form-check border rounded p-3 ps-5">
-                                        <input class="form-check-input opcion-extra" type="checkbox" id="filtro_<?= $f['id'] ?>" data-nombre="<?= $f['nombre'] ?>" data-precio="<?= $f['costo'] ?>"
-                                               <?php if ($f['nombre'] == 'Filtro de aceite' || $f['nombre'] == 'Filtro de aire') { echo 'checked'; } ?>>
-                                        <label class="form-check-label w-100 d-flex justify-content-between" for="filtro_<?= $f['id'] ?>">
-                                            <span><?= $f['nombre'] ?></span>
-                                            <span class="fw-bold">+ L. <?= number_format($f['costo'], 2) ?></span>
-                                        </label>
-                                    </div>
+                                    <label for="marcaAceite" class="form-label">Marca</label>
+                                    <select id="marcaAceite" class="form-select">
+                                        <?php foreach ($marcas as $m) { ?>
+                                            <option value="<?= $m['nombre'] ?>" data-precio="<?= $m['costo'] ?>">
+                                                <?= $m['nombre'] ?> (+ L. <?= number_format($m['costo'], 2) ?>)
+                                            </option>
+                                        <?php } ?>
+                                    </select>
                                 </div>
-                            <?php } ?>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="fw-bold mb-1"><span class="badge bg-warning text-dark me-2">4</span>Repuestos adicionales</h5>
-                        <p class="small text-secondary">Cada uno tiene su costo extra.</p>
-                        <div class="row g-3">
-                            <?php foreach ($extras as $e) { ?>
                                 <div class="col-12 col-md-6">
-                                    <div class="form-check border rounded p-3 ps-5">
-                                        <input class="form-check-input opcion-extra" type="checkbox"
-                                               id="extra_<?= $e['id'] ?>"
-                                               data-nombre="<?= $e['nombre'] ?>"
-                                               data-precio="<?= $e['costo'] ?>">
-                                        <label class="form-check-label w-100 d-flex justify-content-between" for="extra_<?= $e['id'] ?>">
-                                            <span><?= $e['nombre'] ?></span>
-                                            <span class="fw-bold">+ L. <?= number_format($e['costo'], 2) ?></span>
-                                        </label>
-                                    </div>
+                                    <label for="viscosidad" class="form-label">Viscosidad</label>
+                                    <select id="viscosidad" class="form-select">
+                                        <?php foreach ($viscosidades as $vis) { ?>
+                                            <option value="<?= $vis['nombre'] ?>"><?= $vis['nombre'] ?></option>
+                                        <?php } ?>
+                                    </select>
                                 </div>
-                            <?php } ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <h5 class="fw-bold mb-3"><span class="badge bg-warning text-dark me-2">3</span>Filtros</h5>
+                            <div class="row g-3">
+                                <?php foreach ($filtros as $f) { ?>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-check border rounded p-3 ps-5">
+                                            <input class="form-check-input opcion-extra" type="checkbox" id="filtro_<?= $f['id'] ?>" data-nombre="<?= $f['nombre'] ?>" data-precio="<?= $f['costo'] ?>"
+                                                <?php if ($f['nombre'] == 'Filtro de aceite' || $f['nombre'] == 'Filtro de aire') { echo 'checked'; } ?>>
+                                            <label class="form-check-label w-100 d-flex justify-content-between" for="filtro_<?= $f['id'] ?>">
+                                                <span><?= $f['nombre'] ?></span>
+                                                <span class="fw-bold">+ L. <?= number_format($f['costo'], 2) ?></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="fw-bold mb-1"><span class="badge bg-warning text-dark me-2">4</span>Repuestos adicionales</h5>
+                            <p class="small text-secondary">Cada uno tiene su costo extra.</p>
+                            <div class="row g-3">
+                                <?php foreach ($extras as $e) { ?>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-check border rounded p-3 ps-5">
+                                            <input class="form-check-input opcion-extra" type="checkbox"
+                                                id="extra_<?= $e['id'] ?>"
+                                                data-nombre="<?= $e['nombre'] ?>"
+                                                data-precio="<?= $e['costo'] ?>">
+                                            <label class="form-check-label w-100 d-flex justify-content-between" for="extra_<?= $e['id'] ?>">
+                                                <span><?= $e['nombre'] ?></span>
+                                                <span class="fw-bold">+ L. <?= number_format($e['costo'], 2) ?></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-12 col-lg-4">
+                    <div class="card shadow-sm border-warning position-sticky" style="top: 100px;">
+                        <div class="card-body">
+                            <h5 class="fw-bold mb-3"><i class="bi bi-receipt text-warning"></i> Resumen de tu kit</h5>
+
+                            <ul id="listaResumen" class="list-group list-group-flush small mb-3"></ul>
+
+                            <div class="d-flex justify-content-between align-items-center border-top pt-3 mb-3">
+                                <span class="fs-5 fw-bold">Total</span>
+                                <span id="total" class="fs-3 fw-bold text-warning">L. 0.00</span>
+                            </div>
+
+                            <button type="button" id="btnAgregar" class="btn btn-warning w-100 fw-bold">
+                                <i class="bi bi-cart-plus"></i> Agregar kit al carrito
+                            </button>
+                            <p id="mensaje" class="small fw-bold text-success mt-3 mb-0"></p>
                         </div>
                     </div>
                 </div>
 
-            </div>
+            </form>
+        </main>
 
-            <div class="col-12 col-lg-4">
-                <div class="card shadow-sm border-warning position-sticky" style="top: 100px;">
-                    <div class="card-body">
-                        <h5 class="fw-bold mb-3"><i class="bi bi-receipt text-warning"></i> Resumen de tu kit</h5>
+        <footer class="py-5 mt-auto border-top bg-dark text-light">
+            <div class="container">
+                <div class="row g-4">
 
-                        <ul id="listaResumen" class="list-group list-group-flush small mb-3"></ul>
-
-                        <div class="d-flex justify-content-between align-items-center border-top pt-3 mb-3">
-                            <span class="fs-5 fw-bold">Total</span>
-                            <span id="total" class="fs-3 fw-bold text-warning">L. 0.00</span>
-                        </div>
-
-                        <button type="button" id="btnAgregar" class="btn btn-warning w-100 fw-bold">
-                            <i class="bi bi-cart-plus"></i> Agregar kit al carrito
-                        </button>
-                        <p id="mensaje" class="small fw-bold text-success mt-3 mb-0"></p>
+                    <div class="col-12 col-md-4">
+                        <h5><i class="bi bi-gear-wide-connected text-warning"></i> Autopartes &amp; Repuestos "Don Pancho"</h5>
+                        <p class="small text-secondary">
+                            Distribuidora de piezas originales y de reemplazo para vehículos japoneses, coreanos y americanos en Honduras.
+                        </p>
                     </div>
+
+                    <div class="col-12 col-md-4">
+                        <h6>Sucursales</h6>
+                        <ul class="list-unstyled small">
+                            <li><i class="bi bi-geo-alt-fill text-warning"></i> Tegucigalpa: Toncontín</li>
+                            <li><i class="bi bi-geo-alt-fill text-warning"></i> Tegucigalpa: Suyapa</li>
+                            <li><i class="bi bi-geo-alt-fill text-warning"></i> San Pedro Sula: Medina</li>
+                            <li><i class="bi bi-geo-alt-fill text-warning"></i> La Ceiba: CA-13</li>
+                        </ul>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <h6>Enlaces</h6>
+                        <ul class="list-unstyled small">
+                            <li><a class="link-light link-underline-opacity-0" href="catalogo.php">Catálogo</a></li>
+                            <li><a class="link-light link-underline-opacity-0" href="kitTune.php">Kit Tune-Up</a></li>
+                            <li><a class="link-light link-underline-opacity-0" href="sucursales.php">Sucursales</a></li>
+                            <li><a class="link-light link-underline-opacity-0" href="login.php">Iniciar Sesión</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+
+                <hr class="border-secondary mt-4">
+                <div class="text-center small text-secondary">
+                    &copy; 2026 Autopartes &amp; Repuestos "Don Pancho" — Honduras.
                 </div>
             </div>
+        </footer>
 
-        </form>
-    </main>
-
-    <footer class="py-5 mt-auto border-top bg-dark text-light">
-        <div class="container">
-            <div class="row g-4">
-
-                <div class="col-12 col-md-4">
-                    <h5><i class="bi bi-gear-wide-connected text-warning"></i> Autopartes &amp; Repuestos "Don Pancho"</h5>
-                    <p class="small text-secondary">
-                        Distribuidora de piezas originales y de reemplazo para vehículos japoneses, coreanos y americanos en Honduras.
-                    </p>
-                </div>
-
-                <div class="col-12 col-md-4">
-                    <h6>Sucursales</h6>
-                    <ul class="list-unstyled small">
-                        <li><i class="bi bi-geo-alt-fill text-warning"></i> Tegucigalpa: Toncontín</li>
-                        <li><i class="bi bi-geo-alt-fill text-warning"></i> Tegucigalpa: Suyapa</li>
-                        <li><i class="bi bi-geo-alt-fill text-warning"></i> San Pedro Sula: Medina</li>
-                        <li><i class="bi bi-geo-alt-fill text-warning"></i> La Ceiba: CA-13</li>
-                    </ul>
-                </div>
-
-                <div class="col-12 col-md-4">
-                    <h6>Enlaces</h6>
-                    <ul class="list-unstyled small">
-                        <li><a class="link-light link-underline-opacity-0" href="catalogo.php">Catálogo</a></li>
-                        <li><a class="link-light link-underline-opacity-0" href="kitTune.php">Kit Tune-Up</a></li>
-                        <li><a class="link-light link-underline-opacity-0" href="sucursales.php">Sucursales</a></li>
-                        <li><a class="link-light link-underline-opacity-0" href="login.php">Iniciar Sesión</a></li>
-                    </ul>
-                </div>
-
-            </div>
-
-            <hr class="border-secondary mt-4">
-            <div class="text-center small text-secondary">
-                &copy; 2026 Autopartes &amp; Repuestos "Don Pancho" — Honduras.
-            </div>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function aLempiras(numero) {
-            return 'L. ' + numero.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        }
-
-        function armarKit() {
-            var lista = [];
-
-            var vehiculo = document.querySelector('input[name="vehiculo"]:checked');
-            lista.push({ nombre: 'Servicio base - ' + vehiculo.dataset.nombre, precio: Number(vehiculo.dataset.precio) });
-
-            var marca = document.getElementById('marcaAceite');
-            var viscosidad = document.getElementById('viscosidad');
-            var marcaElegida = marca.options[marca.selectedIndex];
-            lista.push({ nombre: 'Aceite ' + marca.value + ' ' + viscosidad.value, precio: Number(marcaElegida.dataset.precio) });
-
-            var marcados = document.querySelectorAll('.opcion-extra:checked');
-            for (var i = 0; i < marcados.length; i++) {
-                lista.push({ nombre: marcados[i].dataset.nombre, precio: Number(marcados[i].dataset.precio) });
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            function aLempiras(numero) {
+                return 'L. ' + numero.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             }
 
-            var total = 0;
-            for (var j = 0; j < lista.length; j++) {
-                total = total + lista[j].precio;
+            function armarKit() {
+                var lista = [];
+
+                var vehiculo = document.querySelector('input[name="vehiculo"]:checked');
+                lista.push({ nombre: 'Servicio base - ' + vehiculo.dataset.nombre, precio: Number(vehiculo.dataset.precio) });
+
+                var marca = document.getElementById('marcaAceite');
+                var viscosidad = document.getElementById('viscosidad');
+                var marcaElegida = marca.options[marca.selectedIndex];
+                lista.push({ nombre: 'Aceite ' + marca.value + ' ' + viscosidad.value, precio: Number(marcaElegida.dataset.precio) });
+
+                var marcados = document.querySelectorAll('.opcion-extra:checked');
+                for (var i = 0; i < marcados.length; i++) {
+                    lista.push({ nombre: marcados[i].dataset.nombre, precio: Number(marcados[i].dataset.precio) });
+                }
+
+                var total = 0;
+                for (var j = 0; j < lista.length; j++) {
+                    total = total + lista[j].precio;
+                }
+
+                return { items: lista, total: total };
             }
 
-            return { items: lista, total: total };
-        }
+            function mostrarResumen() {
+                var kit = armarKit();
+                var html = '';
 
-        function mostrarResumen() {
-            var kit = armarKit();
-            var html = '';
+                for (var i = 0; i < kit.items.length; i++) {
+                    html += '<li class="list-group-item d-flex justify-content-between px-0">'
+                        + '<span>' + kit.items[i].nombre + '</span>'
+                        + '<span>' + aLempiras(kit.items[i].precio) + '</span>'
+                        + '</li>';
+                }
 
-            for (var i = 0; i < kit.items.length; i++) {
-                html += '<li class="list-group-item d-flex justify-content-between px-0">'
-                      + '<span>' + kit.items[i].nombre + '</span>'
-                      + '<span>' + aLempiras(kit.items[i].precio) + '</span>'
-                      + '</li>';
+                document.getElementById('listaResumen').innerHTML = html;
+                document.getElementById('total').textContent = aLempiras(kit.total);
             }
 
-            document.getElementById('listaResumen').innerHTML = html;
-            document.getElementById('total').textContent = aLempiras(kit.total);
-        }
+            document.getElementById('formKit').addEventListener('change', mostrarResumen);
+            mostrarResumen();
 
-        document.getElementById('formKit').addEventListener('change', mostrarResumen);
-        mostrarResumen();
+            document.getElementById('btnAgregar').addEventListener('click', function () {
+                var kit = armarKit();
+                var carrito = JSON.parse(localStorage.getItem('carritoKits') || '[]');
+                carrito.push(kit);
+                localStorage.setItem('carritoKits', JSON.stringify(carrito));
 
-        document.getElementById('btnAgregar').addEventListener('click', function () {
-            var kit = armarKit();
-            var carrito = JSON.parse(localStorage.getItem('carritoKits') || '[]');
-            carrito.push(kit);
-            localStorage.setItem('carritoKits', JSON.stringify(carrito));
-
-            document.getElementById('mensaje').textContent = 'Kit agregado al carrito por ' + aLempiras(kit.total);
-        });
-    </script>
-</body>
+                document.getElementById('mensaje').textContent = 'Kit agregado al carrito por ' + aLempiras(kit.total);
+            });
+        </script>
+    </body>
 </html>
