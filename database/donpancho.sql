@@ -1,5 +1,6 @@
---Creacion de la BD
-CREATE DATABASE don_pancho;
+-- Creacion de la BD
+CREATE DATABASE IF NOT EXISTS don_pancho;
+USE don_pancho;
 
 -- Usuarios del sistema (login)
 CREATE TABLE usuarios (
@@ -32,7 +33,7 @@ CREATE TABLE sucursales (
     zona   VARCHAR(80) NOT NULL
 );
 
---Productos
+-- Productos
 CREATE TABLE productos (
     id               INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     nombre           VARCHAR(120)  NOT NULL,

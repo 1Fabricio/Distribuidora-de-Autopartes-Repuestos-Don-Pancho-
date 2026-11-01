@@ -1,3 +1,32 @@
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+require_once __DIR__ . '/../include/conexion.php';
+require_once __DIR__ . '/../classes/producto.php';
+
+$db = new ConexionBD();
+$pdo = $db->conectar();
+
+$categoriaSeleccionada = isset($_GET['categoria']) ? $_GET['categoria'] : '';
+
+try {
+    if ($categoriaSeleccionada) {
+        // Consulta usando la tabla 'productos' y un JOIN con 'categorias'
+        $stmt = $pdo->prepare("SELECT p.*, c.nombre AS categoria_nombre FROM productos p INNER JOIN categorias c ON p.categoria_id = c.id WHERE p.categoria_id = :cat");
+        $stmt->execute([':cat' => $categoriaSeleccionada]);
+    } else {
+        $stmt = $pdo->query("SELECT p.*, c.nombre AS categoria_nombre FROM productos p INNER JOIN categorias c ON p.categoria_id = c.id");
+    }
+    $repuestos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $categoriasStmt = $pdo->query("SELECT * FROM categorias");
+    $categorias = $categoriasStmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $repuestos = [];
+    $categorias = [];
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,7 +36,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
-<body>
+<body class="bg-light d-flex flex-column min-vh-100">
     <nav class="navbar navbar-expand-lg sticky-top shadow-sm py-3 bg-dark" data-bs-theme="dark">
         <div class="container">
 
@@ -23,10 +52,10 @@
             <div class="collapse navbar-collapse" id="menuNavegacion">
                 <ul class="navbar-nav ms-auto align-items-lg-center">
                     <li class="nav-item">
-                        <a href="index.php" class="nav-link px-3 active">Inicio</a>
+                        <a href="index.php" class="nav-link px-3">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a href="catalogo.php" class="nav-link px-3">Catálogo</a>
+                        <a href="catalogo.php" class="nav-link px-3 active">Catálogo</a>
                     </li>
                     <li class="nav-item">
                         <a href="kitTuneup.php" class="nav-link px-3">Kit Tune-Up</a>
@@ -47,6 +76,54 @@
         </div>
     </nav>
     
+    <main class="container my-5 flex-grow-1">
+        <div class="text-center mb-5">
+            <h1 class="fw-bold">Catálogo Interactivo de Repuestos</h1>
+            <p class="text-muted">Piezas originales y de reemplazo para vehículos japoneses, coreanos y americanos</p>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-12 text-center">
+                <a href="catalogo.php" class="btn btn-outline-dark m-1 <?= empty($categoriaSeleccionada) ? 'active' : '' ?>">Todas las Categorías</a>
+                <?php foreach ($categorias as $cat): ?>
+                    <a href="catalogo.php?categoria=<?= $cat['id'] ?>" class="btn btn-outline-dark m-1 <?= $categoriaSeleccionada == $cat['id'] ? 'active' : '' ?>">
+                        <?= htmlspecialchars($cat['nombre']) ?>
+                    </a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <?php if (!empty($repuestos)): ?>
+                <?php foreach ($repuestos as $rep): ?>
+                    <div class="col">
+                        <div class="card h-100 shadow-sm">
+                            <!-- Se cambió 'imagen' por 'fotografia' según tu tabla productos -->
+                            <img src="../uploads/<?= htmlspecialchars($rep['fotografia']) ?>" class="card-img-top p-3" alt="<?= htmlspecialchars($rep['nombre']) ?>" style="height: 220px; object-fit: contain;">
+                            <div class="card-body d-flex flex-column">
+                                <!-- Se usa la categoría obtenida del JOIN -->
+                                <span class="badge bg-secondary mb-2 align-self-start"><?= htmlspecialchars($rep['categoria_nombre']) ?></span>
+                                <h5 class="card-title"><?= htmlspecialchars($rep['nombre']) ?></h5>
+                                <p class="card-text text-muted small"><?= htmlspecialchars($rep['descripcion'] ?? '') ?></p>
+                                <div class="mt-auto">
+                                    <p class="fs-5 fw-bold text-success mb-2">L. <?= number_format($rep['precio'], 2) ?></p>
+                                    <p class="text-secondary small">Stock disponible: <strong><?= $rep['stock'] ?></strong> unidades</p>
+                                    <a href="carrito.php?id=<?= $rep['id'] ?>" class="btn btn-primary w-100">Agregar al Carrito</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="col-12 text-center">
+                    <div class="alert alert-warning" role="alert">
+                        No hay repuestos disponibles en esta categoría actualmente.
+                    </div>
+                </div>
+            <?php endif; ?>
+        </div>
+    </main>
+
     <footer class="py-5 mt-auto border-top bg-dark text-light">
         <div class="container">
             <div class="row g-4">
@@ -72,7 +149,7 @@
                     <h6>Enlaces</h6>
                     <ul class="list-unstyled small">
                         <li><a class="link-light link-underline-opacity-0" href="catalogo.php">Catálogo</a></li>
-                        <li><a class="link-light link-underline-opacity-0" href="kit-tuneup.php">Kit Tune-Up</a></li>
+                        <li><a class="link-light link-underline-opacity-0" href="kitTuneup.php">Kit Tune-Up</a></li>
                         <li><a class="link-light link-underline-opacity-0" href="sucursales.php">Sucursales</a></li>
                         <li><a class="link-light link-underline-opacity-0" href="login.php">Iniciar Sesión</a></li>
                     </ul>

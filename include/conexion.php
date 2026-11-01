@@ -10,7 +10,7 @@ declare(strict_types=1);
 
         public function conectar(): ?PDO {
             //Cadena DSN
-            $dsn = "mysql:host={$this->host}; dbname={$this->db};charset={$this->charset}";
+            $dsn = "mysql:host={$this->host};dbname={$this->db};charset={$this->charset}";
 
             $opciones = [
                 PDO::ATTR_ERRMODE              => PDO::ERRMODE_EXCEPTION,
@@ -28,6 +28,8 @@ declare(strict_types=1);
 
                 echo "<div style='color:red;background:#fee2e2;padding:1Spx;border-radius:Bpx;'>
                 <strong>Error de conexcion:<strong>No se pudo conectar a la base de datos </div>";
+
+                return null;
 
 
             }
