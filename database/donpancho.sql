@@ -150,3 +150,33 @@ INSERT INTO productos
 ('Refrigerante concentrado',
  'Refrigerante para motor, mezclar según indicaciones',
  320.00, 30, 'refrigerante-castrol.jpg', 1, 4);
+
+ -- Opciones del kit Tune-Up
+INSERT INTO kit_opciones (tipo, nombre, costo) VALUES
+('vehiculo', 'Sedán',        850.00),
+('vehiculo', 'SUV',         1100.00),
+('vehiculo', 'Pick-Up 4x4', 1350.00),
+
+('marca_aceite', 'Genérico',      0.00),
+('marca_aceite', 'Valvoline',   200.00),
+('marca_aceite', 'Shell Helix', 220.00),
+('marca_aceite', 'Castrol',     250.00),
+('marca_aceite', 'Mobil 1',     350.00),
+
+('viscosidad', '0W-20',  0.00),
+('viscosidad', '5W-30',  0.00),
+('viscosidad', '5W-40',  0.00),
+('viscosidad', '10W-30', 0.00),
+('viscosidad', '10W-40', 0.00),
+('viscosidad', '20W-50', 0.00),
+
+('filtro', 'Filtro de aceite',       150.00),
+('filtro', 'Filtro de aire',         180.00),
+('filtro', 'Filtro de combustible',  260.00),
+('filtro', 'Filtro de cabina (A/C)', 200.00),
+
+('extra', 'Bujías de iridio',        1200.00),
+('extra', 'Pastillas cerámicas',      950.00),
+('extra', 'Limpiador de inyectores',  280.00),
+('extra', 'Líquido de frenos',        220.00),
+('extra', 'Refrigerante',             350.00);
