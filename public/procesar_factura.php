@@ -11,7 +11,6 @@ if(empty($_SESSION['carrito'])){
     header("Location: carrito.php");
     exit;
 }
-
 $nombre_cliente = trim($_POST['nombre_cliente']);
 $rtn = trim($_POST['rtn']);
 $telefono = trim($_POST['telefono']);
