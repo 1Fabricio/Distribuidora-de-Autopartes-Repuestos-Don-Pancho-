@@ -1,10 +1,8 @@
 <?php
-
 declare(strict_types=1);
 session_start();
 require_once __DIR__ . '/../include/auth.php';
-
-if (empty($_SESSION['carrito'])) {
+if(empty($_SESSION['carrito']) && empty($_SESSION['carrito_kits'])){
     header("Location: carrito.php");
     exit;
 }
@@ -25,104 +23,118 @@ if (empty($_SESSION['carrito'])) {
 </head>
  
 <body>
-
-    <?php require __DIR__ . '/../include/navbar.php'; ?>
-
-    <main class="container my-5">
-
-        <h2 class="text-center mb-4">
-            Facturación SAR
-        </h2>
-
-        <div class="card shadow">
-
-            <div class="card-body">
-
-                <form action="procesar_factura.php" method="POST">
-
-                    <div class="mb-3">
-
-                        <label class="form-label">
-                            Nombre del Cliente
-                        </label>
-
-                        <input type="text" name="nombre_cliente" class="form-control" required>
-
-                    </div>
-
-                    <div class="mb-3">
-
-                        <label class="form-label">
-                            RTN
-                        </label>
-
-                        <input type="text" name="rtn" maxlength="14" class="form-control" required>
-
-                    </div>
-
-                    <div class="mb-3">
-
-                        <label class="form-label">
-                            Teléfono
-                        </label>
-
-                        <input type="text" name="telefono" maxlength="8" class="form-control" required>
-
-                    </div>
-
-                    <div class="mb-3">
-
-                        <label class="form-label">
-                            Sucursal
-                        </label>
-
-                        <select name="sucursal_id" class="form-select">
-
-                            <option value="1">Toncontín</option>
-                            <option value="2">Suyapa</option>
-                            <option value="3">Medina</option>
-                            <option value="4">CA-13</option>
-
-                        </select>
-
-                    </div>
-
-                    <div class="mb-3">
-
-                        <label class="form-label">
-                            Tipo de Entrega
-                        </label>
-
-                        <select name="flete_modalidad" class="form-select">
-
-                            <option value="retiro">
-                                Retiro en Mostrador (L.0.00)
-                            </option>
-
-                            <option value="moto">
-                                Moto Express (L.50.00)
-                            </option>
-
-                            <option value="camion">
-                                Camioncito (L.180.00)
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                    <button type="submit" class="btn btn-success w-100">
-
-                        <i class="bi bi-receipt"></i>Generar Factura</button>
-
-                </form>
-
-            </div>
-
+ 
+<?php require __DIR__ . '/../include/navbar.php'; ?>
+ 
+<main class="container my-5">
+ 
+    <h2 class="text-center mb-4">
+        Facturación SAR
+    </h2>
+ 
+    <div class="card shadow">
+ 
+        <div class="card-body">
+ 
+            <form action="procesar_factura.php" method="POST">
+ 
+                <div class="mb-3">
+ 
+                    <label class="form-label">
+                        Nombre del Cliente
+                    </label>
+ 
+                    <input type="text"
+                           name="nombre_cliente"
+                           class="form-control"
+                           required>
+ 
+                </div>
+ 
+                <div class="mb-3">
+ 
+                    <label class="form-label">
+                        RTN
+                    </label>
+ 
+                    <input type="text"
+                           name="rtn"
+                           maxlength="14"
+                           class="form-control"
+                           required>
+ 
+                </div>
+ 
+                <div class="mb-3">
+ 
+                    <label class="form-label">
+                        Teléfono
+                    </label>
+ 
+                    <input type="text"
+                           name="telefono"
+                           maxlength="8"
+                           class="form-control"
+                           required>
+ 
+                </div>
+ 
+                <div class="mb-3">
+ 
+                    <label class="form-label">
+                        Sucursal
+                    </label>
+ 
+                    <select name="sucursal_id"
+                            class="form-select">
+ 
+                        <option value="1">Toncontín</option>
+                        <option value="2">Suyapa</option>
+                        <option value="3">Medina</option>
+                        <option value="4">CA-13</option>
+ 
+                    </select>
+ 
+                </div>
+ 
+                <div class="mb-3">
+ 
+                    <label class="form-label">
+                        Tipo de Entrega
+                    </label>
+ 
+                    <select name="flete_modalidad"
+                            class="form-select">
+ 
+                        <option value="retiro">
+                            Retiro en Mostrador (L.0.00)
+                        </option>
+ 
+                        <option value="moto">
+                            Moto Express (L.50.00)
+                        </option>
+ 
+                        <option value="camion">
+                            Camioncito (L.180.00)
+                        </option>
+ 
+                    </select>
+ 
+                </div>
+ 
+                <button type="submit"
+                        class="btn btn-success w-100">
+ 
+                    <i class="bi bi-receipt"></i>Generar Factura</button>
+ 
+            </form>
+ 
         </div>
-
-    </main>
-    <footer class="py-5 mt-auto border-top bg-dark text-light">
+ 
+    </div>
+ 
+</main>
+<footer class="py-5 mt-auto border-top bg-dark text-light">
         <div class="container">
             <div class="row g-4">
  
