@@ -1,6 +1,6 @@
 # Autopartes y Repuestos "Don Pancho"
 
-Proyecto de la clase ISC-305 Programación Web.
+Proyecto de la clase ISC-305 Programación Web III.
 
 ## Descripción
 
@@ -10,14 +10,14 @@ El sistema tiene dos partes:
 
 Portal de clientes: catálogo de repuestos desde la base de datos, kit de mantenimiento Tune-Up, carrito, facturación con RTN e ISV del 15 %, y directorio de sucursales con historial de compras.
 
-Panel administrativo: acceso con login y roles  en este casoadmin y bodeguero. Permite manejar el inventario con ventanas modales y subir fotos de los repuestos en JPG, PNG o WEBP.
+Panel administrativo: acceso con login y roles (admin y bodeguero). Permite manejar el inventario con ventanas modales y subir fotos de los repuestos en JPG, PNG o WEBP.
 
 ## Requisitos
 
 - XAMPP con Apache y MySQL
 - PHP 8.0 o superior
 - Git
-- el navegador web
+- Un navegador web
 
 ## Instalación
 
@@ -28,15 +28,15 @@ Panel administrativo: acceso con login y roles  en este casoadmin y bodeguero. P
 2. Abrir XAMPP y encender Apache y MySQL.
 3. Entrar a http://localhost/phpmyadmin
 4. Ir a la pestaña Importar, elegir el archivo database/donpancho.sql y presionar Continuar. Esto crea la base de datos don_pancho con sus tablas y datos iniciales.
-5. Revisar que include/conexion.php tenga los datos del MySQL que se va a usar; Por defecto usa host localhost, usuario root y sin contraseña.
+5. Revisar que include/conexion.php tenga los datos del MySQL que se va a usar. Por defecto usa host localhost, usuario root y sin contraseña.
 6. Abrir en el navegador:
 
     http://localhost/Distribuidora-de-Autopartes-Repuestos-Don-Pancho-/public/index.php
 
-
-## Credenciales de prueba para la tarea
+## Credenciales de prueba
 
 | Rol | Usuario | Contraseña |
+|-----|---------|------------|
 | Administrador | admin | Admin123! |
 | Bodeguero | bodeguero | Bodega123! |
 | Cliente | cliente | Cliente123! |
@@ -67,8 +67,8 @@ Historial de compras (página Sucursales):
 
 ## Integrantes
 
-Edixon Fabricio Muñoz 
-Yadira Elizabeth Zepeda 
-Justin David Gonzalez
-Mellany Dayanne Castellanos
-Patricia Jasmin Blandin
+- Edixon Fabricio Muñoz
+- Yadira Elizabeth Zepeda
+- Justin David Gonzalez
+- Mellany Dayanne Castellanos
+- Patricia Jasmin Blandin
