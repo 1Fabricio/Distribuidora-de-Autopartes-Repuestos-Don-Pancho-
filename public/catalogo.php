@@ -4,6 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 require_once __DIR__ . '/../include/conexion.php';
 require_once __DIR__ . '/../include/auth.php'; 
+require_once __DIR__ . '/../include/auth.php'; 
 require_once __DIR__ . '/../classes/producto.php';
 
 $db = new ConexionBD();
@@ -13,7 +14,6 @@ $categoriaSeleccionada = isset($_GET['categoria']) ? $_GET['categoria'] : '';
 
 try {
     if ($categoriaSeleccionada) {
-        
         $stmt = $pdo->prepare("SELECT p.*, c.nombre AS categoria_nombre FROM productos p INNER JOIN categorias c ON p.categoria_id = c.id WHERE p.categoria_id = :cat");
         $stmt->execute([':cat' => $categoriaSeleccionada]);
     } else {

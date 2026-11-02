@@ -1,7 +1,7 @@
 <?php
  
 session_start();
- 
+require_once __DIR__ . '/../include/auth.php';
 require_once __DIR__ . '/../include/conexion.php';
  
 $db = new ConexionBD();
@@ -88,45 +88,8 @@ if (isset($_GET['id'])) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg sticky-top shadow-sm py-3 bg-dark" data-bs-theme="dark">
-        <div class="container">
- 
-            <a class="navbar-brand d-flex align-items-center fw-bold fs-4" href="index.php">
-                <i class="bi bi-gear-wide-connected text-warning me-2"></i>
-                <span>Don Pancho <span class="badge bg-warning text-dark fs-6">Honduras</span></span>
-            </a>
- 
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavegacion" aria-controls="menuNavegacion" aria-expanded="false" aria-label="Abrir navegación">
-                <span class="navbar-toggler-icon"></span>
-            </button>
- 
-            <div class="collapse navbar-collapse" id="menuNavegacion">
-                <ul class="navbar-nav ms-auto align-items-lg-center">
-                    <li class="nav-item">
-                        <a href="index.php" class="nav-link px-3 active">Inicio</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="catalogo.php" class="nav-link px-3">Catálogo</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="kitTune.php" class="nav-link px-3">Kit Tune-Up</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="sucursales.php" class="nav-link px-3">Sucursales</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="carrito.php" class="nav-link px-3"><i class="bi bi-cart3"></i> Carrito</a>
-                    </li>
- 
-                    <li class="nav-item ms-lg-2">
-                        <a href="login.php" class="btn btn-warning rounded-pill px-4 fw-bold">Iniciar Sesión</a>
-                    </li>
-                </ul>
-            </div>
- 
-        </div>
-    </nav>
- 
+    <?php require __DIR__ . '/../include/navbar.php'; ?>
+
     <main class="container my-5">
  
     <h2 class="mb-4">
