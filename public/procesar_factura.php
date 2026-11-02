@@ -1,54 +1,70 @@
 <?php
-
+ 
 session_start();
-
+ 
 require_once __DIR__ . '/../include/conexion.php';
-
+require_once __DIR__ . '/../include/kit.php';
+ 
 $db = new ConexionBD();
 $pdo = $db->conectar();
-
-if(empty($_SESSION['carrito'])){
+ 
+if(empty($_SESSION['carrito']) && empty($_SESSION['carrito_kits'])){
     header("Location: carrito.php");
     exit;
+}
+ 
+$kitRepo = new Kit($pdo);
+$carrito = $_SESSION['carrito'] ?? [];
+$kits = [];
+foreach(($_SESSION['carrito_kits'] ?? []) as $sel){
+    $r = $kitRepo->calcular($sel);
+    if($r !== null){
+        $kits[] = $r;
+    }
 }
 $nombre_cliente = trim($_POST['nombre_cliente']);
 $rtn = trim($_POST['rtn']);
 $telefono = trim($_POST['telefono']);
 $sucursal_id = (int)$_POST['sucursal_id'];
 $flete_modalidad = $_POST['flete_modalidad'];
-
+ 
 if(!preg_match('/^[0-9]{14}$/', $rtn)){
     die("RTN inválido.");
 }
-
+ 
 if(!preg_match('/^[0-9]{8}$/', $telefono)){
     die("Teléfono inválido.");
 }
-
+ 
 $subtotal = 0;
 $cantidadRepuestos = 0;
-
-foreach($_SESSION['carrito'] as $item){
-
+ 
+foreach($carrito as $item){
+ 
     $subtotal += (
         $item['precio']
         * $item['cantidad']
     );
-
+ 
     $cantidadRepuestos += $item['cantidad'];
 }
-
+ 
+foreach($kits as $k){
+    $subtotal += $k['total'];
+    $cantidadRepuestos += count($k['items']);
+}
+ 
 $descuento = 0;
 if($cantidadRepuestos >= 10){
-
+ 
     $descuento = $subtotal * 0.10;
-
+ 
 }
-
+ 
 $baseImponible = $subtotal - $descuento;
 $isv = $baseImponible * 0.15;
 switch($flete_modalidad){
-
+ 
     case 'moto':
         $flete = 50.00;
         break;
@@ -58,7 +74,7 @@ switch($flete_modalidad){
     default:
         $flete = 0.00;
 }
-
+ 
 $total = $baseImponible + $isv + $flete;
 $stmt = $pdo->prepare("
     INSERT INTO pedidos
@@ -84,7 +100,7 @@ $stmt = $pdo->prepare("
         ?
     )
 ");
-
+ 
 $stmt->execute([
     $sucursal_id,
     $flete_modalidad,
@@ -94,7 +110,7 @@ $stmt->execute([
     $flete,
     $total
 ]);
-
+ 
 $pedido_id = $pdo->lastInsertId();
 $stmtDetalle = $pdo->prepare("
     INSERT INTO pedido_detalle
@@ -110,9 +126,9 @@ $stmtDetalle = $pdo->prepare("
         ?,?,?,?,?
     )
 ");
-
-foreach($_SESSION['carrito'] as $item){
-
+ 
+foreach($carrito as $item){
+ 
     $stmtDetalle->execute([
         $pedido_id,
         $item['id'],
@@ -120,9 +136,21 @@ foreach($_SESSION['carrito'] as $item){
         $item['cantidad'],
         $item['precio']
     ]);
-
+ 
 }
-
+ 
+foreach($kits as $k){
+    foreach($k['items'] as $it){
+        $stmtDetalle->execute([
+            $pedido_id,
+            null,
+            'Kit Tune-Up: ' . $it['nombre'],
+            1,
+            $it['precio']
+        ]);
+    }
+}
+ 
 $stmtFactura = $pdo->prepare("
     INSERT INTO facturas
     (
@@ -136,14 +164,14 @@ $stmtFactura = $pdo->prepare("
         ?,?,?,?
     )
 ");
-
+ 
 $stmtFactura->execute([
     $pedido_id,
     $nombre_cliente,
     $rtn,
     $telefono
 ]);
-
+ 
 $factura_id = $pdo->lastInsertId();
 $numeroFactura =
 "FACT-" .
@@ -153,11 +181,11 @@ str_pad(
     "0",
     STR_PAD_LEFT
 );
-
-unset($_SESSION['carrito']);
-
+ 
+unset($_SESSION['carrito'], $_SESSION['carrito_kits']);
+ 
 ?>
-
+ 
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -167,53 +195,53 @@ unset($_SESSION['carrito']);
           rel="stylesheet">
 </head>
 <body>
-
+ 
 <div class="container mt-5">
-
+ 
     <div class="card shadow">
-
+ 
         <div class="card-body">
-
+ 
             <h2 class="text-center mb-4"> Factura SAR </h2>
                 <p><strong>Número de Factura:</strong> 
                 <?= $numeroFactura ?>
             </p>
-
+ 
             <p><strong>Cliente:</strong>
                 <?= htmlspecialchars($nombre_cliente) ?>
             </p>
-
+ 
             <p><strong>RTN:</strong>
                 <?= htmlspecialchars($rtn) ?>
             </p>
-
+ 
             <p><strong>Teléfono:</strong>
                 <?= htmlspecialchars($telefono) ?>
             </p>
-
+ 
             <hr><p><strong>Subtotal:</strong>
              L. <?= number_format($subtotal,2) ?>
             </p>
-
+ 
             <p><strong>Descuento:</strong>
                 L. <?= number_format($descuento,2) ?>
             </p>
-
+ 
             <p><strong>ISV (15%):</strong>
                 L. <?= number_format($isv,2) ?>
             </p>
-
+ 
             <p><strong>Flete:</strong>
                 L. <?= number_format($flete,2) ?>
             </p>
-
+ 
             <h3 class="text-success">Total: L. <?= number_format($total,2) ?></h3>
-
+ 
             <a href="catalogo.php"
                class="btn btn-primary mt-3">
-
+ 
                 Volver al Catálogo
-
+ 
             </a>
         </div>
     </div>
