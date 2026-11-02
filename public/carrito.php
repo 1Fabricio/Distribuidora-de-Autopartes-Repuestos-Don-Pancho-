@@ -1,4 +1,69 @@
-<!DOCTYPE html>
+<?php
+
+session_start();
+
+require_once __DIR__ . '/../include/conexion.php';
+
+$db = new ConexionBD();
+$pdo = $db->conectar();
+
+if (!isset($_SESSION['carrito'])) {
+    $_SESSION['carrito'] = [];
+}
+
+if(isset($_GET['eliminar'])){
+
+    $idEliminar = (int) $_GET['eliminar'];
+
+    if(isset($_SESSION['carrito'][$idEliminar])){
+
+        unset($_SESSION['carrito'][$idEliminar]);
+
+    }
+
+}
+
+
+if (isset($_GET['id'])) {
+
+    $id = (int) $_GET['id'];
+
+    $stmt = $pdo->prepare("
+        SELECT *
+        FROM productos
+        WHERE id = ?
+    ");
+
+    $stmt->execute([$id]);
+
+    $producto = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($producto) {
+
+        if (isset($_SESSION['carrito'][$id])) {
+
+            $_SESSION['carrito'][$id]['cantidad']++;
+
+        } else {
+
+            $_SESSION['carrito'][$id] = [
+                'id' => $producto['id'],
+                'nombre' => $producto['nombre'],
+                'precio' => $producto['precio'],
+                'cantidad' => 1
+            ];
+
+        }
+
+    } 
+    
+
+}
+?> 
+ 
+ 
+ 
+ <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -46,6 +111,88 @@
 
         </div>
     </nav>
+
+    <main class="container my-5">
+
+    <h2 class="mb-4">
+        Carrito de Compras
+    </h2>
+
+    <?php if(empty($_SESSION['carrito'])): ?>
+
+        <div class="alert alert-warning">
+            No hay productos en el carrito.
+        </div>
+
+    <?php else: ?>
+
+        <table class="table table-bordered">
+
+            <thead>
+
+                <tr>
+                    <th>Producto</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Subtotal</th>
+                    <th>Eliminar</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <?php
+
+                $total = 0;
+
+                foreach($_SESSION['carrito'] as $item):
+
+                    $subtotal =
+                    $item['precio']
+                    *
+                    $item['cantidad'];
+
+                    $total += $subtotal;
+
+                ?>
+
+                <tr>
+                    <td>
+                        <?= htmlspecialchars($item['nombre']) ?>
+                    </td>
+                    <td>
+                        L. <?= number_format($item['precio'],2) ?>
+                    </td>
+                    <td>
+                        <?= $item['cantidad'] ?>
+                    </td>
+                    <td>
+                        L. <?= number_format($subtotal,2) ?>
+                    </td>
+                     <td>
+                     <a href="carrito.php?eliminar=<?= $item['id'] ?>" class="btn btn-danger btn-sm">Eliminar</a>
+                     </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
+        <div class="text-end">
+            <h4>
+                Total: L. <?= number_format($total,2) ?>
+            </h4>
+        </div>
+    <?php endif; ?>
+</main>
+
+
+    
+     <div class="text-end mt-4">
+
+    <a href="facturacion.php" class="btn btn-success btn-lg" >
+        <i class="bi bi-receipt"></i>
+        Facturar Compra
+    </a> 
+                </div>
     
     <footer class="py-5 mt-auto border-top bg-dark text-light">
         <div class="container">
@@ -79,6 +226,9 @@
                 </div>
 
             </div>
+           
+
+      </div>
 
             <hr class="border-secondary mt-4">
             <div class="text-center small text-secondary">
