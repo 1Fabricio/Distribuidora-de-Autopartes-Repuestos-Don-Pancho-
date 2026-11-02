@@ -30,7 +30,7 @@ if ($parametro == 'suv') {
     $vehiculoElegido = 'Sedán';
 }
 
-// Mensajes que deja agregar_kit.php (se muestran una sola vez)
+
 $mensaje = '';
 $mensajeError = '';
 if (isset($_SESSION['mensaje'])) {
@@ -78,7 +78,6 @@ if (isset($_SESSION['mensaje_error'])) {
 
         <main class="container my-5">
 
-        <!-- Ahora el formulario se envía de verdad a agregar_kit.php por POST -->
         <form id="formKit" method="POST" action="agregar_kit.php" class="row g-4">
 
                 <div class="col-12 col-lg-8">
@@ -97,8 +96,6 @@ if (isset($_SESSION['mensaje_error'])) {
                                 }
                             ?>
                                 <div class="col-12 col-md-4">
-                                    <!-- value = id: esto es lo que viaja al servidor.
-                                         data-precio solo sirve para mostrar el resumen en pantalla. -->
                                     <input type="radio" class="btn-check" name="vehiculo" id="vehiculo_<?= $v['id'] ?>"
                                            value="<?= $v['id'] ?>"
                                            data-nombre="<?= $v['nombre'] ?>" data-precio="<?= $v['costo'] ?>"
@@ -265,8 +262,7 @@ if (isset($_SESSION['mensaje_error'])) {
                 return 'L. ' + numero.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             }
 
-        // Esto es SOLO para mostrar el resumen en pantalla.
-        // El precio real lo calcula PHP en agregar_kit.php.
+
         function armarKit() {
             var lista = [];
 
